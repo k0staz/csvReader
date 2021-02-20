@@ -3,9 +3,9 @@
 /** Acquires a cell, which is requested by provided address
  *
  * @param address of a requested cell in a csv table
- * @return the content of a requested cell
+ * @return a pointer to a cell
  */
-string Table ::get_cell(const string& address) const {
+string*  Table ::getCellAddress(const string& address) {
     istringstream iss(address);
     string col_name, pos;
     col_name = address.substr(0,address.find_first_of("0123456789"));
@@ -13,36 +13,52 @@ string Table ::get_cell(const string& address) const {
 
     auto it = find(table.at("r_h").begin(), table.at("r_h").end(), pos);
     int index = it - table.at("r_h").begin();
-    string cell = table.at(col_name)[index];
 
-    return cell;
+    return &table.at(col_name)[index];
 }
 
-/** Calculates the desired mathematical expression
+/** Calculates the cell's mathematical expression and updates the cell with the result
  *
- * @param expression to be calculated
- * @return the result of a calculated expression
+ * @param cell a pointer to a cell
  */
-int Table ::calculate(const string& expression) const {
-    size_t i = expression.find_first_of("+-*/");
-    char op = expression.at(i);
-    istringstream iss(expression);
+void Table ::calculateAndUpdate(string* cell) {
+    string all_op = "+-*/";
+    if (cell->at(0) == '='){
+        string expression = cell->substr(1, string::npos);
+        size_t i = expression.find_first_of(all_op);
+        char op = expression.at(i);
+        istringstream iss(expression);
 
-    string arg1, arg2;
-    getline(iss, arg1, op);
-    getline(iss, arg2, op);
+        string arg1, arg2;
+        getline(iss, arg1, op);
+        getline(iss, arg2, op);
 
-    int val1 = stoi(get_cell(arg1));
-    int val2 = stoi(get_cell(arg2));
+        string* cellR = getCellAddress(arg1);
+        if (cellR->find_first_of(all_op) != string::npos){
+            calculateAndUpdate(cellR);
+        }
+        string* cellL = getCellAddress(arg2);
+        if (cellL->find_first_of(all_op) != string::npos){
+            calculateAndUpdate(cellL);
+        }
 
-    switch (op) {
-        case '+':
-            return val1 + val2;
-        case '-':
-            return val1 - val2;
-        case '*':
-            return val1 * val2;
-        case '/':
-            return val1 / val2;
+        int val1 = stoi(*cellR);
+        int val2 = stoi(*cellL);
+
+
+        switch (op) {
+            case '+':
+                *cell = to_string(val1 + val2);
+                break;
+            case '-':
+                *cell = to_string(val1 - val2);
+                break;
+            case '*':
+                *cell = to_string(val1 * val2);
+                break;
+            case '/':
+                *cell = to_string(val1 / val2);
+                break;
+        }
     }
 }

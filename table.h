@@ -60,7 +60,8 @@ public:
             }
             for (vector<pair<string, size_t>>::iterator it = indToCalc.begin(); it != indToCalc.end(); it++) {
                 string cell = table[it->first].at(it->second);
-                table[it->first][it->second] = to_string(calculate(cell.substr(1, string::npos)));
+                calculateAndUpdate(&table[it->first][it->second]);
+
             }
         }
     };
@@ -79,9 +80,8 @@ public:
         return os;
     }
 private:
-    string get_cell(const string& address) const;
-    int calculate(const string& expression) const;
-
+    string* getCellAddress(const string& address);
+    void calculateAndUpdate(string* cell);
     map<string, vector<string>> table;
     vector<string> col_order;
 };

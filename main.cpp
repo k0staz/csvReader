@@ -8,7 +8,7 @@ using  namespace std;
 
 int main() {
     ifstream myFile;
-    myFile.open("test.csv");
+    myFile.open("test2.csv");
 
     Table tbl(myFile);
 
