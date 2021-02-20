@@ -20,8 +20,9 @@ string*  Table ::getCellAddress(const string& address) {
 /** Calculates the cell's mathematical expression and updates the cell with the result
  *
  * @param cell a pointer to a cell
+ * @param traceBack keeping a track of cells participating in calc, in order to avoid inf loop
  */
-void Table ::calculateAndUpdate(string* cell) {
+void Table ::calculateAndUpdate(string* cell, set<string> traceBack) {
     string all_op = "+-*/";
     if (cell->at(0) == '='){
         string expression = cell->substr(1, string::npos);
@@ -33,13 +34,19 @@ void Table ::calculateAndUpdate(string* cell) {
         getline(iss, arg1, op);
         getline(iss, arg2, op);
 
+        if (traceBack.find(arg1) != traceBack.end() or traceBack.find(arg2) != traceBack.end()){
+            throw invalid_argument("There is an eternal loop in csv data");
+        }
+
         string* cellR = getCellAddress(arg1);
         if (cellR->find_first_of(all_op) != string::npos){
-            calculateAndUpdate(cellR);
+            traceBack.insert(arg1);
+            calculateAndUpdate(cellR, traceBack);
         }
         string* cellL = getCellAddress(arg2);
         if (cellL->find_first_of(all_op) != string::npos){
-            calculateAndUpdate(cellL);
+            traceBack.insert(arg2);
+            calculateAndUpdate(cellL, traceBack);
         }
 
         int val1 = stoi(*cellR);

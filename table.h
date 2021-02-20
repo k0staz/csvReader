@@ -6,10 +6,12 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 
@@ -81,7 +83,7 @@ public:
     }
 private:
     string* getCellAddress(const string& address);
-    void calculateAndUpdate(string* cell);
+    void calculateAndUpdate(string* cell, set<string> traceBack = {});
     map<string, vector<string>> table;
     vector<string> col_order;
 };

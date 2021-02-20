@@ -6,7 +6,13 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/kosta/CLionProjects/test/table.cpp
+C:/Users/kosta/CLionProjects/test/main.cpp
+iostream
+-
+string
+-
+sstream
+-
 table.h
 C:/Users/kosta/CLionProjects/test/table.h
 
@@ -17,6 +23,8 @@ vector
 -
 map
 -
+set
+-
 fstream
 -
 iostream
@@ -24,5 +32,7 @@ iostream
 sstream
 -
 algorithm
+-
+stdexcept
 -
 
