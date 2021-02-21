@@ -6,9 +6,10 @@
 
 using  namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
     ifstream myFile;
-    myFile.open("test.csv");
+    myFile.open(argv[1]);
+//    myFile.open("test.csv");
 
     Table tbl(myFile);
 

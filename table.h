@@ -45,6 +45,9 @@ public:
                             table["r_h"] = vector<string>();
                             col_order.push_back("r_h");
                         } else {
+                            if(value.find_first_of("0123456789") != string::npos){ //Test for a name to consist only of letters
+                                throw invalid_argument("The name of the column can't hold any digits in it");
+                            }
                             table[value] = vector<string>();
                             col_order.push_back(value);
                         }
@@ -53,6 +56,13 @@ public:
                 } else {
                     for (vector<string>::iterator it = col_order.begin(); it != col_order.end(); it++) {
                         getline(iss, value, ',');
+                        if(value[0] != '=' ){ //Test that cells contain only positive integers
+                            for(auto vCh = value.begin(); vCh != value.end(); vCh++){
+                                if(!isdigit(*vCh)){
+                                    throw invalid_argument("Cells can contain only positive integers ");
+                                }
+                            }
+                        }
                         table[*it].push_back(value);
                         if (value[0] == '=') {
                             indToCalc.push_back(make_pair(*it, table[*it].size()-1));

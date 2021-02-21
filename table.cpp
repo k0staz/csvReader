@@ -14,7 +14,11 @@ string*  Table ::getCellAddress(const string& address) {
     auto it = find(table.at("r_h").begin(), table.at("r_h").end(), pos);
     int index = it - table.at("r_h").begin();
 
-    return &table.at(col_name)[index];
+    try{ //Test for an unexisting address of a cell
+        return &table.at(col_name)[index];
+    } catch (...) {
+        throw out_of_range("The cell with the address: " + address + " has not been found");
+    }
 }
 
 /** Calculates the cell's mathematical expression and updates the cell with the result
