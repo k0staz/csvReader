@@ -72,7 +72,7 @@ CMAKE_BINARY_DIR = C:\Users\kosta\CLionProjects\test\cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/test.dir/all
+all: CMakeFiles/csvreader.dir/all
 
 .PHONY : all
 
@@ -82,36 +82,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/test.dir/clean
+clean: CMakeFiles/csvreader.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/test.dir
+# Target rules for target CMakeFiles/csvreader.dir
 
 # All Build rule for target.
-CMakeFiles/test.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\kosta\CLionProjects\test\cmake-build-debug\CMakeFiles --progress-num=1,2,3 "Built target test"
-.PHONY : CMakeFiles/test.dir/all
+CMakeFiles/csvreader.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\csvreader.dir\build.make CMakeFiles/csvreader.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\csvreader.dir\build.make CMakeFiles/csvreader.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\kosta\CLionProjects\test\cmake-build-debug\CMakeFiles --progress-num=1,2,3 "Built target csvreader"
+.PHONY : CMakeFiles/csvreader.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/test.dir/rule: cmake_check_build_system
+CMakeFiles/csvreader.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\kosta\CLionProjects\test\cmake-build-debug\CMakeFiles 3
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/test.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/csvreader.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\kosta\CLionProjects\test\cmake-build-debug\CMakeFiles 0
-.PHONY : CMakeFiles/test.dir/rule
+.PHONY : CMakeFiles/csvreader.dir/rule
 
 # Convenience name for target.
-test: CMakeFiles/test.dir/rule
+csvreader: CMakeFiles/csvreader.dir/rule
 
-.PHONY : test
+.PHONY : csvreader
 
 # clean rule for target.
-CMakeFiles/test.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/clean
-.PHONY : CMakeFiles/test.dir/clean
+CMakeFiles/csvreader.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\csvreader.dir\build.make CMakeFiles/csvreader.dir/clean
+.PHONY : CMakeFiles/csvreader.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

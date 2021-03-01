@@ -26,66 +26,16 @@ using namespace std;
  */
 class Table {
 public:
-    /**
-     * @brief Constructs table from csv file
-     * @param File with comma-separated values (csv)
-     */
-    Table(ifstream& File){
-        if (File) {
-            string line, value;
-            vector<pair<string, size_t>>indToCalc;
-            bool first = true;
-
-            while (File.good()) {
-                getline(File, line, '\n');
-                istringstream iss(line);
-                if (first) {
-                    while (getline(iss, value, ',')) {
-                        if (value.empty()) {
-                            table["r_h"] = vector<string>();
-                            col_order.push_back("r_h");
-                        } else {
-                            if(value.find_first_of("0123456789") != string::npos){ //Test for a name to consist only of letters
-                                throw invalid_argument("The name of the column can't hold any digits in it");
-                            }
-                            table[value] = vector<string>();
-                            col_order.push_back(value);
-                        }
-                    }
-                    first = false;
-                } else {
-                    for (vector<string>::iterator it = col_order.begin(); it != col_order.end(); it++) {
-                        getline(iss, value, ',');
-                        if(value[0] != '=' ){ //Test that cells contain only positive integers
-                            for(auto vCh = value.begin(); vCh != value.end(); vCh++){
-                                if(!isdigit(*vCh)){
-                                    throw invalid_argument("Cells can contain only positive integers ");
-                                }
-                            }
-                        }
-                        table[*it].push_back(value);
-                        if (value[0] == '=') {
-                            indToCalc.push_back(make_pair(*it, table[*it].size()-1));
-                        }
-                    }
-                }
-            }
-            for (vector<pair<string, size_t>>::iterator it = indToCalc.begin(); it != indToCalc.end(); it++) {
-                string cell = table[it->first].at(it->second);
-                calculateAndUpdate(&table[it->first][it->second]);
-
-            }
-        }
-    };
+    Table(ifstream& File);
 
     friend ostream& operator<<(ostream& os, const Table& tb){
-        for(vector<string>::const_iterator col_it = tb.col_order.begin(); col_it != tb.col_order.end(); col_it++){
-            os << *col_it << ",";
+        for(auto& col : tb.col_order){
+            os << col << ",";
         }
         os << endl;
         for(int i = 0; i < tb.table.at("r_h").size(); i++){
-            for(vector<string>::const_iterator col_it = tb.col_order.begin(); col_it != tb.col_order.end(); col_it++){
-                os << tb.table.at(*col_it)[i] << ",";
+            for(auto& col : tb.col_order){
+                os << tb.table.at(col)[i] << ",";
             }
             os << endl;
         }

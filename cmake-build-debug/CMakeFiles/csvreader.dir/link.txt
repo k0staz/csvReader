@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\csvreader.dir/objects.a
+C:\dev\msys64\mingw32\bin\ar.exe cr CMakeFiles\csvreader.dir/objects.a @CMakeFiles\csvreader.dir\objects1.rsp
+C:\dev\msys64\mingw32\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\csvreader.dir/objects.a -Wl,--no-whole-archive  -o csvreader.exe -Wl,--out-implib,libcsvreader.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\csvreader.dir\linklibs.rsp

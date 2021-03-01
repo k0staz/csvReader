@@ -1,10 +1,65 @@
 #include "table.h"
 
+/**
+* @brief Constructs table from csv file
+* @param File with comma-separated values (csv)
+*/
+Table ::Table(ifstream &File) {
+    if (File) {
+        string line, value;
+        vector<pair<string, size_t>>indToCalc;
+        bool first = true;
+
+        while (File.good()) {
+            getline(File, line, '\n');
+            istringstream iss(line);
+            if (first) {
+                bool first_col = true;
+                while (getline(iss, value, ',')) {
+                    if (first_col) {
+                        table["r_h"] = vector<string>();
+                        col_order.push_back("r_h");
+                        first_col = false;
+                    }else if ( value.empty() ) {
+                        throw invalid_argument("Column name can't be empty"); //Test for empty name of a column
+                    } else {
+                        if(value.find_first_of("0123456789") != string::npos){ //Test for a name to consist only of letters
+                            throw invalid_argument("The name of the column can't hold any digits in it");
+                        }
+                        table[value] = vector<string>();
+                        col_order.push_back(value);
+                    }
+                }
+                first = false;
+            } else {
+                for (auto& x : col_order) {
+                    getline(iss, value, ',');
+                    if (value[0] != '=' or value.empty()) { //Test that cells contain only positive integers
+                        for (auto& ch : value ) {
+                            if (!isdigit(ch)) {
+                                throw invalid_argument("Cells can contain only positive integers and should not be empty");
+                            }
+                        }
+                    }
+                    table[x].push_back(value);
+                    if (value[0] == '=') {
+                        indToCalc.push_back(make_pair(x, table[x].size()-1));
+                    }
+                }
+            }
+        }
+        for (auto& x : indToCalc) {
+            string cell = table[x.first].at(x.second);
+            calculateAndUpdate(&table[x.first][x.second]);
+        }
+    }
+    }
+
 /** Acquires a cell, which is requested by provided address
- *
- * @param address of a requested cell in a csv table
- * @return a pointer to a cell
- */
+*
+* @param address of a requested cell in a csv table
+* @return a pointer to a cell
+*/
 string*  Table ::getCellAddress(const string& address) {
     istringstream iss(address);
     string col_name, pos;
@@ -62,7 +117,11 @@ void Table ::calculateAndUpdate(string* cell, set<string> traceBack) {
                 *cell = to_string(val1 + val2);
                 break;
             case '-':
-                *cell = to_string(val1 - val2);
+                if (val1 <= val2) {
+                    *cell = "0";
+                } else {
+                    *cell = to_string(val1 - val2);
+                }
                 break;
             case '*':
                 *cell = to_string(val1 * val2);

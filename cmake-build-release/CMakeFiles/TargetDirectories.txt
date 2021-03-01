@@ -1,0 +1,3 @@
+C:/Users/kosta/CLionProjects/test/cmake-build-release/CMakeFiles/edit_cache.dir
+C:/Users/kosta/CLionProjects/test/cmake-build-release/CMakeFiles/csvreader.dir
+C:/Users/kosta/CLionProjects/test/cmake-build-release/CMakeFiles/rebuild_cache.dir
