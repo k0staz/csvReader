@@ -18,7 +18,7 @@ Table ::Table(ifstream &File) {
                 while (getline(iss, value, ',')) {
                     if (first_col) {
                         table["r_h"] = vector<string>();
-                        col_order.push_back("r_h");
+                        col_order.emplace_back("r_h");
                         first_col = false;
                     }else if ( value.empty() ) {
                         throw invalid_argument("Column name can't be empty"); //Test for empty name of a column
@@ -43,14 +43,14 @@ Table ::Table(ifstream &File) {
                     }
                     table[x].push_back(value);
                     if (value[0] == '=') {
-                        indToCalc.push_back(make_pair(x, table[x].size()-1));
+                        indToCalc.emplace_back(make_pair(x, table[x].size()-1));
                     }
                 }
             }
         }
         for (auto& x : indToCalc) {
             string cell = table[x.first].at(x.second);
-            calculateAndUpdate(&table[x.first][x.second]);
+            calculateAndUpdate(table[x.first][x.second]);
         }
     }
     }
@@ -60,7 +60,7 @@ Table ::Table(ifstream &File) {
 * @param address of a requested cell in a csv table
 * @return a pointer to a cell
 */
-string*  Table ::getCellAddress(const string& address) {
+string&  Table ::getCellAddress(const string& address) {
     istringstream iss(address);
     string col_name, pos;
     col_name = address.substr(0,address.find_first_of("0123456789"));
@@ -70,7 +70,7 @@ string*  Table ::getCellAddress(const string& address) {
     int index = it - table.at("r_h").begin();
 
     try{ //Test for an unexisting address of a cell
-        return &table.at(col_name)[index];
+        return table.at(col_name)[index];
     } catch (...) {
         throw out_of_range("The cell with the address: " + address + " has not been found");
     }
@@ -81,10 +81,10 @@ string*  Table ::getCellAddress(const string& address) {
  * @param cell a pointer to a cell
  * @param traceBack keeping a track of cells participating in calc, in order to avoid inf loop
  */
-void Table ::calculateAndUpdate(string* cell, set<string> traceBack) {
+void Table ::calculateAndUpdate(string& cell, set<string> traceBack) {
     string all_op = "+-*/";
-    if (cell->at(0) == '='){
-        string expression = cell->substr(1, string::npos);
+    if (cell.at(0) == '='){
+        string expression = cell.substr(1, string::npos);
         size_t i = expression.find_first_of(all_op);
         char op = expression.at(i);
         istringstream iss(expression);
@@ -97,38 +97,54 @@ void Table ::calculateAndUpdate(string* cell, set<string> traceBack) {
             throw invalid_argument("There is an eternal loop in csv data");
         }
 
-        string* cellR = getCellAddress(arg1);
-        if (cellR->find_first_of(all_op) != string::npos){
+        string cellR = getCellAddress(arg1);
+        if (cellR.find_first_of(all_op) != string::npos){
             traceBack.insert(arg1);
             calculateAndUpdate(cellR, traceBack);
         }
-        string* cellL = getCellAddress(arg2);
-        if (cellL->find_first_of(all_op) != string::npos){
+        string cellL = getCellAddress(arg2);
+        if (cellL.find_first_of(all_op) != string::npos){
             traceBack.insert(arg2);
             calculateAndUpdate(cellL, traceBack);
         }
 
-        int val1 = stoi(*cellR);
-        int val2 = stoi(*cellL);
+        int val1 = stoi(cellR);
+        int val2 = stoi(cellL);
 
 
         switch (op) {
             case '+':
-                *cell = to_string(val1 + val2);
+                cell = to_string(val1 + val2);
                 break;
             case '-':
                 if (val1 <= val2) {
-                    *cell = "0";
+                    cell = "0";
                 } else {
-                    *cell = to_string(val1 - val2);
+                    cell = to_string(val1 - val2);
                 }
                 break;
             case '*':
-                *cell = to_string(val1 * val2);
+                cell = to_string(val1 * val2);
                 break;
             case '/':
-                *cell = to_string(val1 / val2);
+                cell = to_string(val1 / val2);
                 break;
+            default:
+                throw invalid_argument("Unknown operator");
         }
     }
+}
+
+ostream& operator<<(ostream& os, const Table& tb){
+    for(auto& col : tb.col_order){
+        os << col << ",";
+    }
+    os << endl;
+    for(int i = 0; i < tb.table.at("r_h").size(); i++){
+        for(auto& col : tb.col_order){
+            os << tb.table.at(col)[i] << ",";
+        }
+        os << endl;
+    }
+    return os;
 }

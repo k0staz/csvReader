@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <fstream>
 #include <iostream>
@@ -26,25 +26,13 @@ using namespace std;
  */
 class Table {
 public:
-    Table(ifstream& File);
+    explicit Table(ifstream& File);
+    friend ostream& operator<<(ostream& os, const Table& tb);
 
-    friend ostream& operator<<(ostream& os, const Table& tb){
-        for(auto& col : tb.col_order){
-            os << col << ",";
-        }
-        os << endl;
-        for(int i = 0; i < tb.table.at("r_h").size(); i++){
-            for(auto& col : tb.col_order){
-                os << tb.table.at(col)[i] << ",";
-            }
-            os << endl;
-        }
-        return os;
-    }
 private:
-    string* getCellAddress(const string& address);
-    void calculateAndUpdate(string* cell, set<string> traceBack = {});
-    map<string, vector<string>> table;
+    string& getCellAddress(const string& address);
+    void calculateAndUpdate(string& cell, set<string> traceBack = {});
+    unordered_map<string, vector<string>> table;
     vector<string> col_order;
 };
 
